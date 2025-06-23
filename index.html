@@ -4,269 +4,30 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Yu-Gi-Oh PDF Export</title>
-        <style>
-            * {
-                box-sizing: border-box;
-            }
-
-            body {
-                font-family: sans-serif;
-                margin: 0;
-                padding: 0;
-                min-height: 100vh;
-                background-color: #f5f5f5;
-            }
-
-            .container {
-                display: flex;
-                min-height: 100vh;
-            }
-
-            #left-panel {
-                width: 300px;
-                padding: 20px;
-                background-color: #f9f9f9;
-                border-right: 1px solid #ddd;
-                flex-shrink: 0;
-            }
-
-            #right-panel {
-                flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-            }
-
-            #card-container {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
-                gap: 15px;
-                justify-items: center;
-            }
-
-            .card {
-                width: 156px;
-                height: 228px;
-                background-size: cover;
-                background-position: center;
-                border: 2px solid #ccc;
-                border-radius: 8px;
-                transition: all 0.3s ease;
-                cursor: pointer;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .card:hover {
-                border-color: #ff6b6b;
-                transform: translateY(-5px);
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            }
-
-            input[type="text"] {
-                width: 100%;
-                padding: 12px;
-                margin-bottom: 10px;
-                border: 2px solid #ddd;
-                border-radius: 6px;
-                font-size: 14px;
-                transition: border-color 0.3s ease;
-            }
-
-            input[type="text"]:focus {
-                outline: none;
-                border-color: #007bff;
-            }
-
-            button {
-                width: 100%;
-                padding: 12px;
-                margin-bottom: 10px;
-                cursor: pointer;
-                border: none;
-                background-color: #007bff;
-                color: white;
-                font-weight: bold;
-                border-radius: 6px;
-                font-size: 14px;
-                transition: background-color 0.3s ease;
-            }
-
-            button:hover {
-                background-color: #0056b3;
-            }
-
-            button:active {
-                transform: translateY(1px);
-            }
-
-            h2 {
-                margin-top: 0;
-                color: #333;
-                text-align: center;
-            }
-
-            .inline-buttons {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 15px;
-            }
-
-            .inline-buttons button {
-                margin-bottom: 0;
-            }
-
-            .input-note {
-                font-size: 0.9em;
-                color: #666;
-                font-style: italic;
-                margin-top: -5px;
-                margin-bottom: 15px;
-                text-align: center;
-            }
-
-            .export-btn {
-                background-color: #28a745;
-                font-size: 16px;
-                padding: 15px;
-            }
-
-            .export-btn:hover {
-                background-color: #218838;
-            }
-
-            /* Mobile Styles */
-            @media (max-width: 768px) {
-                .container {
-                    flex-direction: column;
-                }
-
-                #left-panel {
-                    width: 100%;
-                    border-right: none;
-                    border-bottom: 1px solid #ddd;
-                    padding: 15px;
-                }
-
-                #right-panel {
-                    padding: 15px;
-                }
-
-                #card-container {
-                    grid-template-columns: repeat(
-                        auto-fill,
-                        minmax(120px, 1fr)
-                    );
-                    gap: 10px;
-                }
-
-                .card {
-                    width: 120px;
-                    height: 175px;
-                }
-
-                h2 {
-                    font-size: 1.5em;
-                    margin-bottom: 15px;
-                }
-
-                .inline-buttons {
-                    flex-direction: column;
-                    gap: 8px;
-                }
-
-                .inline-buttons button {
-                    padding: 10px;
-                }
-            }
-
-            /* Small Mobile Styles */
-            @media (max-width: 480px) {
-                #left-panel {
-                    padding: 10px;
-                }
-
-                #right-panel {
-                    padding: 10px;
-                }
-
-                #card-container {
-                    grid-template-columns: repeat(
-                        auto-fill,
-                        minmax(100px, 1fr)
-                    );
-                    gap: 8px;
-                }
-
-                .card {
-                    width: 100px;
-                    height: 146px;
-                }
-
-                input[type="text"] {
-                    padding: 10px;
-                    font-size: 16px; /* Prevents zoom on iOS */
-                }
-
-                button {
-                    padding: 10px;
-                    font-size: 14px;
-                }
-
-                .export-btn {
-                    padding: 12px;
-                    font-size: 15px;
-                }
-
-                h2 {
-                    font-size: 1.3em;
-                }
-            }
-
-            /* Large Desktop Styles */
-            @media (min-width: 1200px) {
-                #left-panel {
-                    width: 350px;
-                    padding: 25px;
-                }
-
-                #card-container {
-                    grid-template-columns: repeat(
-                        auto-fill,
-                        minmax(180px, 1fr)
-                    );
-                    gap: 15px;
-                }
-
-                .card {
-                    width: 180px;
-                    height: 263px;
-                }
-            }
-
-            /* Touch-friendly improvements */
-            @media (hover: none) and (pointer: coarse) {
-                .card:hover {
-                    transform: none;
-                }
-
-                .card:active {
-                    transform: scale(0.95);
-                    border-color: #ff6b6b;
-                }
-
-                button:hover {
-                    background-color: #007bff;
-                }
-
-                button:active {
-                    background-color: #0056b3;
-                }
-            }
-        </style>
+        <link rel="stylesheet" href="asset/css/style.css" />
     </head>
     <body>
         <div class="container">
             <div id="left-panel">
-                <h2>Yu-Gi-Oh PDF</h2>
+                <div class="tooltip" onclick="showHelp()">
+                    <h2 style="flex-grow: 1">Yu-Gi-Oh PDF</h2>
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/471/471664.png"
+                        alt="Help"
+                        width="32"
+                        height="32"
+                    />
+                    <div class="tooltip-text">
+                        Hỗ trợ xuất ảnh card Yu-Gi-Oh kích thước tiêu chuẩn sang
+                        PDF để in.<br />
+                        <strong>Hướng dẫn sử dụng:</strong><br />
+                        - Thêm ảnh: Nhập URL ảnh hoặc dán ảnh từ clipboard.<br />
+                        - Xóa ảnh: Double cick hoặc nhấn giữ.<br />
+                        - Nhấn "Lưu local" để lưu vào trình duyệt.<br />
+                        - Nhấn "Xuất PDF" để tải xuống file PDF.<br />
+                    </div>
+                </div>
+
                 <input
                     type="text"
                     id="img-url"
@@ -278,9 +39,31 @@
                     <button onclick="addCard(3)">Thêm x3</button>
                 </div>
 
-                <button class="export-btn" onclick="exportPDF()">
-                    📄 Xuất PDF
-                </button>
+                <div
+                    style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        flex-direction: column;
+                        font-size: medium;
+                    "
+                >
+                    <button id="save-local-btn" onclick="handleSaveLocal()">
+                        📥Lưu local
+                    </button>
+
+                    <button
+                        id="clear-btn"
+                        onclick="clearCards()"
+                        style="background-color: rgb(255, 34, 0)"
+                    >
+                        🗑️ Xóa tất cả
+                    </button>
+
+                    <button class="export-btn" onclick="exportPDF()">
+                        📄 Xuất PDF
+                    </button>
+                </div>
             </div>
 
             <div id="right-panel">
@@ -289,143 +72,6 @@
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-        <script>
-            const { jsPDF } = window.jspdf;
-            const urlList = [];
-            const container = document.getElementById("card-container");
-
-            function addCard(num) {
-                const input = document.getElementById("img-url");
-                const url = input.value.trim();
-                if (url) {
-                    for (let i = 0; i < num; i++) {
-                        urlList.push(url);
-                    }
-                    renderCards();
-                } else {
-                    alert("Vui lòng nhập URL ảnh hợp lệ.");
-                }
-            }
-
-            function renderCards() {
-                container.innerHTML = "";
-                urlList.forEach((url, index) => {
-                    const div = document.createElement("div");
-                    div.className = "card";
-                    div.style.backgroundImage = `url(${url})`;
-
-                    // Handle both right-click and long press for mobile
-                    div.addEventListener("contextmenu", (e) => {
-                        e.preventDefault();
-                        urlList.splice(index, 1);
-                        renderCards();
-                    });
-
-                    // Long press for mobile devices
-                    let pressTimer;
-                    div.addEventListener("touchstart", (e) => {
-                        pressTimer = setTimeout(() => {
-                            if (confirm("Xóa thẻ này?")) {
-                                urlList.splice(index, 1);
-                                renderCards();
-                            }
-                        }, 800);
-                    });
-
-                    div.addEventListener("touchend", () => {
-                        clearTimeout(pressTimer);
-                    });
-
-                    div.addEventListener("touchmove", () => {
-                        clearTimeout(pressTimer);
-                    });
-
-                    container.appendChild(div);
-                });
-            }
-
-            async function exportPDF() {
-                if (urlList.length === 0) {
-                    alert("Vui lòng thêm ít nhất một thẻ trước khi xuất PDF.");
-                    return;
-                }
-
-                const pdf = new jsPDF({
-                    orientation: "portrait",
-                    unit: "mm",
-                    format: "a4",
-                });
-                const cardW = 59,
-                    cardH = 86;
-                let x = 10,
-                    y = 10;
-
-                try {
-                    for (let i = 0; i < urlList.length; i++) {
-                        const img = await loadImage(urlList[i]);
-                        pdf.addImage(img, "JPEG", x, y, cardW, cardH);
-
-                        x += cardW;
-                        if (x + cardW > 210) {
-                            x = 10;
-                            y += cardH;
-                        }
-                        if (y + cardH > 297) {
-                            pdf.addPage();
-                            x = 10;
-                            y = 10;
-                        }
-                    }
-
-                    pdf.save("yugioh-cards.pdf");
-                } catch (error) {
-                    alert("Có lỗi xảy ra khi xuất PDF. Vui lòng thử lại.");
-                    console.error("PDF Export Error:", error);
-                }
-            }
-
-            function loadImage(url) {
-                return new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.crossOrigin = "anonymous";
-                    img.onload = () => {
-                        const canvas = document.createElement("canvas");
-                        canvas.width = img.naturalWidth;
-                        canvas.height = img.naturalHeight;
-                        const ctx = canvas.getContext("2d");
-                        ctx.drawImage(img, 0, 0);
-                        resolve(canvas.toDataURL("image/jpeg", 1.0));
-                    };
-                    img.onerror = reject;
-                    img.src = url;
-                });
-            }
-
-            // Handle paste from clipboard
-            document.addEventListener("paste", async (e) => {
-                const items = e.clipboardData.items;
-                for (let item of items) {
-                    // Check if the item is an image
-                    if (item.type.startsWith("image/")) {
-                        const file = item.getAsFile();
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            urlList.push(reader.result);
-                            renderCards();
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                }
-            });
-
-            // Handle Enter key in input field
-            document
-                .getElementById("img-url")
-                .addEventListener("keypress", (e) => {
-                    if (e.key === "Enter") {
-                        addCard(1);
-                    }
-                });
-        </script>
+        <script src="asset/js/main.js"></script>
     </body>
 </html>
