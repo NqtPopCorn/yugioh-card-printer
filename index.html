@@ -4,74 +4,151 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Yu-Gi-Oh PDF Export</title>
-        <link rel="stylesheet" href="asset/css/style.css" />
+        <link rel="stylesheet" href="assets/css/style.css" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     </head>
     <body>
-        <div class="container">
-            <div id="left-panel">
-                <div class="tooltip" onclick="showHelp()">
-                    <h2 style="flex-grow: 1">Yu-Gi-Oh PDF</h2>
-                    <img
-                        src="https://cdn-icons-png.flaticon.com/512/471/471664.png"
-                        alt="Help"
-                        width="32"
-                        height="32"
+        <div class="flex flex-col md:flex-row">
+            <!-- Sidebar -->
+            <div
+                id="sidebar"
+                class="w-full h-full bg-gray-100 border-r border-gray-300 p-4 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:block md:h-screen md:w-64 md:fixed z-40"
+            >
+                <div class="flex justify-between items-center mb-4 relative">
+                    <h2 class="flex-grow text-center font-bold text-lg">
+                        Yu-Gi-Oh PDF
+                    </h2>
+                    <button class="group/help relative">
+                        <img
+                            src="https://cdn-icons-png.flaticon.com/512/471/471664.png"
+                            alt="Help"
+                            width="32"
+                            height="32"
+                        />
+                        <div
+                            class="group-hover/help:block hidden absolute top-8 right-0 bg-gray-500 text-white text-left p-2 rounded shadow-lg w-52"
+                        >
+                            Hỗ trợ xuất ảnh card Yu-Gi-Oh kích thước tiêu chuẩn
+                            sang PDF để in.<br />
+                            <strong>Hướng dẫn sử dụng:</strong><br />
+                            - Thêm ảnh: Nhập URL ảnh hoặc dán ảnh từ
+                            clipboard.<br />
+                            - Xóa ảnh: Double cick hoặc nhấn giữ.<br />
+                            - Nhấn "Lưu local" để lưu vào trình duyệt.<br />
+                            - Nhấn "Xuất PDF" để tải xuống file PDF.<br />
+                        </div>
+                    </button>
+                </div>
+
+                <form id="image-form">
+                    <input
+                        class="w-full p-2 border border-gray-300 rounded mb-4"
+                        type="text"
+                        id="img-url"
+                        placeholder="Dán URL ảnh ở đây..."
                     />
-                    <div class="tooltip-text">
-                        Hỗ trợ xuất ảnh card Yu-Gi-Oh kích thước tiêu chuẩn sang
-                        PDF để in.<br />
-                        <strong>Hướng dẫn sử dụng:</strong><br />
-                        - Thêm ảnh: Nhập URL ảnh hoặc dán ảnh từ clipboard.<br />
-                        - Xóa ảnh: Double cick hoặc nhấn giữ.<br />
-                        - Nhấn "Lưu local" để lưu vào trình duyệt.<br />
-                        - Nhấn "Xuất PDF" để tải xuống file PDF.<br />
-                    </div>
+                    <input type="submit" class="hidden" />
+                </form>
+                <p class="text-gray-500 text-sm italic text-center mb-4">
+                    Hoặc dán ảnh từ clipboard
+                </p>
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <button
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        onclick="addCard(1)"
+                    >
+                        Thêm x1
+                    </button>
+                    <button
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        onclick="addCard(3)"
+                    >
+                        Thêm x3
+                    </button>
                 </div>
 
-                <input
-                    type="text"
-                    id="img-url"
-                    placeholder="Dán URL ảnh ở đây..."
-                />
-                <p class="input-note">Hoặc dán ảnh từ clipboard</p>
-                <div class="inline-buttons">
-                    <button onclick="addCard(1)">Thêm x1</button>
-                    <button onclick="addCard(3)">Thêm x3</button>
-                </div>
-
-                <div
-                    style="
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        flex-direction: column;
-                        font-size: medium;
-                    "
-                >
-                    <button id="save-local-btn" onclick="handleSaveLocal()">
+                <div class="grid grid-cols-1 gap-2 mb-4">
+                    <button
+                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        onclick="handleSaveLocal()"
+                    >
                         📥Lưu local
                     </button>
 
                     <button
-                        id="clear-btn"
                         onclick="clearCards()"
-                        style="background-color: rgb(255, 34, 0)"
+                        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                     >
                         🗑️ Xóa tất cả
                     </button>
 
-                    <button class="export-btn" onclick="exportPDF()">
+                    <div class="mt-4 grid grid-cols-3 gap-1">
+                        <input
+                            type="number"
+                            name="cardWidth"
+                            id="cardWidth"
+                            class="w-full p-1 border border-gray-300 rounded"
+                            placeholder="Chiều rộng thẻ (mm)"
+                            value="59"
+                        />
+                        <input
+                            type="number"
+                            name="cardHeight"
+                            id="cardHeight"
+                            class="w-full p-1 border border-gray-300 rounded"
+                            placeholder="Chiều cao thẻ (mm)"
+                            value="86"
+                        />
+                        <select
+                            name="cardFormat"
+                            id="cardFormat"
+                            class="w-full p-1 border border-gray-300 rounded"
+                        >
+                            <option value="59x86" selected>59x86</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+
+                    <button
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        onclick="exportPDF()"
+                    >
                         📄 Xuất PDF
                     </button>
                 </div>
             </div>
 
-            <div id="right-panel">
-                <div id="card-container"></div>
+            <!-- Main content -->
+            <div class="flex-1 mt-16 md:mt-0 p-6 md:ml-64">
+                <!-- Card list container -->
+                <div
+                    id="card-container"
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
+                ></div>
+
+                <!-- Context Menu -->
+                <div
+                    id="context-menu"
+                    class="hidden absolute z-50 w-40 bg-white border border-gray-300 rounded shadow-lg"
+                >
+                    <button
+                        onclick="handleDuplicate()"
+                        class="w-full text-left px-3 py-2 hover:bg-gray-100"
+                    >
+                        📄 Nhân bản
+                    </button>
+                    <button
+                        onclick="handleDelete()"
+                        class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
+                    >
+                        🗑️ Xóa
+                    </button>
+                </div>
             </div>
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-        <script src="asset/js/main.js"></script>
+        <script src="assets/js/main.js"></script>
+        <script src="assets/js/cardSize.js"></script>
     </body>
 </html>
