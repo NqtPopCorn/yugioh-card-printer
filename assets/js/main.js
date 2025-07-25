@@ -89,14 +89,27 @@ async function exportPDF() {
         alert("Vui lòng thêm ít nhất một thẻ trước khi xuất PDF.");
         return;
     }
+    if (urlList.length % 9 !== 0) {
+        if (
+            !confirm(
+                `Chưa đủ thẻ cho trang a4 cuối, bạn nên thêm ${
+                    9 - (urlList.length % 9)
+                } thẻ nữa! Vẫn tiếp tục xuất PDF?`
+            )
+        ) {
+            return;
+        }
+    }
+    //confirm card num
+    if (!confirm(`Bạn có chắc chắn muốn xuất ${urlList.length} thẻ không?`)) {
+        return;
+    }
 
     const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
     });
-    // const cardW = 60,
-    //     cardH = (86 * 60) / 59;
     const cardW = parseFloat(cardWidthInput.value) || 59;
     const cardH = parseFloat(cardHeightInput.value) || 86;
     let gap = 0;
@@ -161,13 +174,6 @@ document.addEventListener("paste", async (e) => {
         }
     }
 });
-
-// Handle Enter key in input field
-// urlInput.addEventListener("keypress", (e) => {
-//     if (e.key === "Enter") {
-//         addCard(1);
-//     }
-// });
 
 // save on click btn
 function handleSaveLocal() {
