@@ -27,20 +27,41 @@ function clearCards() {
     }
 }
 
-function addCard(num) {
+async function addCard(num) {
     const url = urlInput.value.trim();
     if (url) {
         const lastIndex = urlList.length;
         for (let i = 0; i < num; i++) {
             urlList.push(url);
-            renderCard(url, lastIndex + i); // Pass the correct index
+            let div = await renderCard(url, lastIndex + i); // Pass the correct index
+            div.scrollIntoView({ behavior: "smooth" });
         }
     } else {
         alert("Vui lòng nhập URL ảnh hợp lệ.");
     }
 }
 
-function renderCard(url, index) {
+async function checkRenderable(url) {
+    // Nếu là ảnh base64 thì luôn hợp lệ
+    if (url.startsWith("data:image/")) {
+        return true;
+    }
+
+    try {
+        const res = await fetch(url);
+        // Không thể biết status nếu mode: "no-cors", nhưng ít nhất fetch không lỗi
+        return true;
+    } catch (error) {
+        alert("Ảnh không thể render: " + url);
+        console.error("Image fetch error:", error);
+        return false;
+    }
+}
+
+async function renderCard(url, index) {
+    if (!(await checkRenderable(url))) {
+        return;
+    }
     const div = document.createElement("div");
     div.className = "card";
     div.style.backgroundImage = `url(${url})`;
@@ -75,6 +96,7 @@ function renderCard(url, index) {
     });
 
     container.appendChild(div);
+    return div;
 }
 
 function renderCards(startAt = 0) {
@@ -168,7 +190,7 @@ document.addEventListener("paste", async (e) => {
             const reader = new FileReader();
             reader.onload = () => {
                 urlList.push(reader.result);
-                renderCards();
+                renderCard(reader.result, urlList.length - 1);
             };
             reader.readAsDataURL(file);
         }

@@ -6,25 +6,27 @@
         <title>Yu-Gi-Oh PDF Export</title>
         <link rel="stylesheet" href="assets/css/style.css" />
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+            integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
     </head>
     <body>
         <div class="flex flex-col md:flex-row">
             <!-- Sidebar -->
             <div
                 id="sidebar"
-                class="w-full h-full bg-gray-100 border-r border-gray-300 p-4 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:block md:h-screen md:w-64 md:fixed z-40"
+                class="w-full h-full bg-gray-100 border-r border-gray-300 p-4 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:block md:h-screen md:w-72 md:fixed z-40"
             >
                 <div class="flex justify-between items-center mb-4 relative">
                     <h2 class="flex-grow text-center font-bold text-lg">
                         Yu-Gi-Oh PDF
                     </h2>
                     <button class="group/help relative">
-                        <img
-                            src="https://cdn-icons-png.flaticon.com/512/471/471664.png"
-                            alt="Help"
-                            width="32"
-                            height="32"
-                        />
+                        <i class="fa-solid fa-circle-question text-lg"></i>
                         <div
                             class="group-hover/help:block hidden absolute top-8 right-0 bg-gray-500 text-white text-left p-2 rounded shadow-lg w-52"
                         >
@@ -36,6 +38,17 @@
                             - Xóa ảnh: Double cick hoặc nhấn giữ.<br />
                             - Nhấn "Lưu local" để lưu vào trình duyệt.<br />
                             - Nhấn "Xuất PDF" để tải xuống file PDF.<br />
+                            <div>
+                                <span class="font-semibold"
+                                    >Nguồn ảnh đề xuất:</span
+                                >
+                                <a
+                                    href="https://www.deviantart.com/"
+                                    target="_blank"
+                                    class="text-white underline hover:underline"
+                                    >Deviantart</a
+                                >
+                            </div>
                         </div>
                     </button>
                 </div>
@@ -72,17 +85,22 @@
                         class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                         onclick="handleSaveLocal()"
                     >
-                        📥Lưu local
+                        <i class="fa-solid fa-floppy-disk"></i>Lưu local
                     </button>
 
                     <button
                         onclick="clearCards()"
                         class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                     >
-                        🗑️ Xóa tất cả
+                        <i class="fa-solid fa-trash"></i> Xóa tất cả
                     </button>
 
-                    <div class="mt-4 grid grid-cols-3 gap-1">
+                    <fieldset
+                        class="mt-4 grid grid-cols-3 gap-1 border border-gray-300 p-2 rounded"
+                    >
+                        <legend class="col-span-3 text-sm font-semibold">
+                            Kích thước in
+                        </legend>
                         <input
                             type="number"
                             name="cardWidth"
@@ -107,19 +125,19 @@
                             <option value="59x86" selected>59x86</option>
                             <option value="custom">Custom</option>
                         </select>
-                    </div>
+                    </fieldset>
 
                     <button
                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                         onclick="exportPDF()"
                     >
-                        📄 Xuất PDF
+                        <i class="fa-solid fa-file-pdf"></i> Xuất PDF
                     </button>
                 </div>
             </div>
 
             <!-- Main content -->
-            <div class="flex-1 mt-16 md:mt-0 p-6 md:ml-64">
+            <div class="flex-1 mt-16 md:mt-0 p-6 md:ml-72">
                 <!-- Card list container -->
                 <div
                     id="card-container"
@@ -135,13 +153,13 @@
                         onclick="handleDuplicate()"
                         class="w-full text-left px-3 py-2 hover:bg-gray-100"
                     >
-                        📄 Nhân bản
+                        <i class="fa-solid fa-clone"></i> Nhân bản
                     </button>
                     <button
                         onclick="handleDelete()"
                         class="w-full text-left px-3 py-2 hover:bg-gray-100 text-red-600"
                     >
-                        🗑️ Xóa
+                        <i class="fa-solid fa-trash"></i> Xóa
                     </button>
                 </div>
             </div>
