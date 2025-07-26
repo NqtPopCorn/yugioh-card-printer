@@ -13,6 +13,7 @@ const cardFormatSelect = document.getElementById("cardFormat");
 const formatSizes = {
     "59x86": { width: 59, height: 86 },
 };
+const waringMessage = document.getElementById("warning-message");
 
 // Handle form submission to add card
 imageForm.addEventListener("submit", (e) => {
@@ -30,6 +31,13 @@ function clearCards() {
 async function addCard(num) {
     const url = urlInput.value.trim();
     if (url) {
+        // Kiểm tra xem URL có hợp lệ không
+        if (!(await checkRenderable(url))) {
+            waringMessage.textContent = "Ảnh không thể render!";
+            return;
+        }
+        waringMessage.textContent = ""; // Clear warning message
+
         const lastIndex = urlList.length;
         for (let i = 0; i < num; i++) {
             urlList.push(url);
@@ -48,20 +56,15 @@ async function checkRenderable(url) {
     }
 
     try {
-        const res = await fetch(url);
-        // Không thể biết status nếu mode: "no-cors", nhưng ít nhất fetch không lỗi
-        return true;
+        const res = await fetch(url, { method: "HEAD" }); // dùng HEAD để không tải toàn ảnh
+        return res.ok; // res.ok là true nếu status từ 200–299
     } catch (error) {
-        alert("Ảnh không thể render: " + url);
         console.error("Image fetch error:", error);
         return false;
     }
 }
 
 async function renderCard(url, index) {
-    if (!(await checkRenderable(url))) {
-        return;
-    }
     const div = document.createElement("div");
     div.className = "card";
     div.style.backgroundImage = `url(${url})`;
@@ -213,7 +216,13 @@ function handleSaveLocal() {
 window.addEventListener("load", () => {
     const savedUrls = localStorage.getItem("yugiohCardUrls");
     if (savedUrls) {
-        urlList.push(...JSON.parse(savedUrls));
+        const parsedUrls = JSON.parse(savedUrls);
+        parsedUrls.forEach(async (url, index) => {
+            if (await checkRenderable(url)) {
+                urlList.push(url);
+                await renderCard(url, index);
+            }
+        });
         renderCards();
     }
 });

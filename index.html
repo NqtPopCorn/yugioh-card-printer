@@ -55,16 +55,23 @@
 
                 <form id="image-form">
                     <input
-                        class="w-full p-2 border border-gray-300 rounded mb-4"
+                        class="w-full p-2 border border-gray-300 rounded mb-2"
                         type="text"
                         id="img-url"
                         placeholder="Dán URL ảnh ở đây..."
                     />
+                    <!-- Warning -->
+                    <span
+                        class="text-red-500 text-sm italic mb-4"
+                        id="warning-message"
+                    ></span>
                     <input type="submit" class="hidden" />
                 </form>
+
                 <p class="text-gray-500 text-sm italic text-center mb-4">
                     Hoặc dán ảnh từ clipboard
                 </p>
+
                 <div class="grid grid-cols-2 gap-2 mb-4">
                     <button
                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -99,7 +106,7 @@
                         class="mt-4 grid grid-cols-3 gap-1 border border-gray-300 p-2 rounded"
                     >
                         <legend class="col-span-3 text-sm font-semibold">
-                            Kích thước in
+                            Kích thước card
                         </legend>
                         <input
                             type="number"
